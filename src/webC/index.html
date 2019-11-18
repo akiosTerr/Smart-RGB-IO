@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>ESP8266 PWM CONTROLLER</h1>
+    <h3 id="ws_status">awaiting connection...</h3>
+    <div class="main container">
+      <div class="head">
+        <div class="button-b">
+          <a class="button" onclick="change_mode()" id="mode" href="#">FADE</a>
+        </div>
+        <div class="input-sec">
+          <div>
+            <label>velocity:</label>
+            <label class="" id="range_value">50</label>
+          </div>
+          <div>
+            <input
+              type="range"
+              min="0"
+              max="1023"
+              value="50"
+              class="slider"
+              id="myRange"
+            />
+          </div>
+        </div>
+        <div class="switch" id="s_bar">
+          <div class="buttonT">
+            <button class="button2" id="mode1" onclick="change_color_mode(1)">
+              color 3
+            </button>
+          </div>
+          <div class="buttonT">
+            <button class="button2" id="mode2" onclick="change_color_mode(2)">
+              color 2
+            </button>
+          </div>
+          <div class="buttonT">
+            <button class="button2" id="mode0" onclick="change_color_mode(0)">
+              random
+            </button>
+          </div>
+        </div>
+        <div id="pallet_array" class="array-c">
+          <a href="#" onclick="set_plt(1)" class="block-c">
+            <div id="pallet1" class="palet"></div>
+          </a>
+          <a href="#" onclick="set_plt(2)" class="block-c">
+            <div id="pallet2" class="palet"></div>
+          </a>
+          <a href="#" onclick="set_plt(3)" class="block-c">
+            <div id="pallet3" class="palet"></div>
+          </a>
+        </div>
+      </div>
+      <section class="columm1">
+        <div class="item red-bg">
+          <p>red</p>
+          <div class="input-box">
+            <input
+              class="input-form"
+              type="number"
+              name="rgb"
+              id="red"
+              value="0"
+            />
+          </div>
+        </div>
+        <div class="item green-bg">
+          <p>green</p>
+          <div class="input-box">
+            <input
+              class="input-form"
+              type="number"
+              name="rgb"
+              id="green"
+              value="0"
+            />
+          </div>
+        </div>
+        <div class="item blue-bg">
+          <p>blue</p>
+          <div class="input-box">
+            <input
+              class="input-form"
+              type="number"
+              name="rgb"
+              id="blue"
+              value="0"
+            />
+          </div>
+        </div>
+
+        <a href="#" onclick="add_rgb()" id="addbt" class="add-btn">
+          <p>add</p>
+        </a>
+      </section>
+    </div>
+    <script src="js/main.js"></script>
+  </body>
+</html>

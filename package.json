@@ -1,0 +1,30 @@
+{
+  "name": "smart-rgb-io",
+  "version": "1.0.0",
+  "description": "smart rgb led strip controller",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akiosTerr/Smart-RGB-IO.git"
+  },
+  "keywords": [
+    "IOT",
+    "smart",
+    "rgb",
+    "led",
+    "controller"
+  ],
+  "author": "AkiosTerr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/akiosTerr/Smart-RGB-IO/issues"
+  },
+  "homepage": "https://github.com/akiosTerr/Smart-RGB-IO#readme"
+}

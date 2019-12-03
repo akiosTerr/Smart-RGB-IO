@@ -9,7 +9,7 @@
     <title>Document</title>
   </head>
   <body>
-    <h1>ESP8266 PWM CONTROLLER</h1>
+    <h1>ESP8266 PWM CONTROLLER (WIP)</h1>
     <h3 id="ws_status">awaiting connection...</h3>
     <div class="main container">
       <div class="head">
@@ -19,14 +19,14 @@
         <div class="input-sec">
           <div>
             <label>velocity:</label>
-            <label class="" id="range_value">50</label>
+            <label class="" id="range_value">1000</label>
           </div>
           <div>
             <input
               type="range"
-              min="0"
-              max="1023"
-              value="50"
+              min="10"
+              max="1000"
+              value="1000"
               class="slider"
               id="myRange"
             />
@@ -99,8 +99,11 @@
           </div>
         </div>
 
-        <a href="#" onclick="add_rgb()" id="addbt" class="add-btn">
-          <p>add</p>
+        <a href="#" onclick="start()" id="addbt" class="add-btn">
+          <p>start</p>
+        </a>
+        <a href="#" onclick="stop()" id="addbt" class="add-btn">
+          <p>stop</p>
         </a>
       </section>
     </div>

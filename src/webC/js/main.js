@@ -13,6 +13,12 @@ function myresponse() {
 }
 */
 
+var timer_obj;
+var velocity;
+var range = document.getElementById("myRange");
+var range_value = document.getElementById("range_value");
+
+
 function enabled_pallets(mode) {
   let c_plt = document.getElementsByClassName("block-c");
   
@@ -119,6 +125,22 @@ function add_rgb() {
   sendMsg("-");
 }
 
+function start () {
+  if(timer_obj != null) clearInterval(timer_obj); 
+
+  timer_obj = setInterval (function() {
+    sendMsg("-");
+    console.log("tick");
+  },velocity); 
+  console.log("interval started");
+}
+
+function stop() {
+  console.log("stoping interval");
+  if(timer_obj != null) clearInterval(timer_obj); 
+  sendMsg("!");
+}
+
 function change_mode() {
   let len = light_modes.length;
   let case1 = document.getElementById("mode");
@@ -195,11 +217,9 @@ function blank_plt() {
   pallets.cur_plt.style.backgroundColor = "darkgray";
 }
 
-
 inputs.red.addEventListener("change", set_color_p, false);
 inputs.green.addEventListener("change", set_color_p, false);
 inputs.blue.addEventListener("change", set_color_p, false);
-
 
 function set_color_p() {
   let Ca = get_rgb_values();
@@ -225,17 +245,25 @@ function get_rgb_values() {
   return rgbV;
 }
 
-
-
-var range = document.getElementById("myRange");
-var range_value = document.getElementById("range_value");
-
 range.addEventListener(
   "input",
   function () {
-    let velocity = range.value;
-    range_value.innerHTML = velocity;
-    sendMsg("@" + velocity);
+    velocity = range.value;
+    range_value.innerHTML = velocity+"ms";
+    //sendMsg("@" + velocity);
   },
   false
 );
+
+// const delay = (ms, result) =>
+//   new Promise(resolve => setTimeout(() => resolve(result), ms));
+
+// async function delays() {
+//   let a = await delay(1600, "Hello, I'm in an");
+//   console.log(a);
+
+//   let b = await delay(800, "async function!");
+//   console.log(b);
+// }
+
+// delays();

@@ -1,9 +1,9 @@
 #include <Arduino.h>
+#include <DNSServer.h>
 #include <ESP8266WiFi.h>
 #include <WiFiManager.h>  
 #include <WebSocketsServer.h>
-#include <DNSServer.h>
-#include <rgb_driver/rgb_classlib.h>
+#include </../rgb_driver/rgb_classlib.h>
 
 #define pin_count 3
 

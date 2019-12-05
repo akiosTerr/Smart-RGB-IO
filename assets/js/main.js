@@ -18,6 +18,23 @@ var velocity;
 var range = document.getElementById("myRange");
 var range_value = document.getElementById("range_value");
 
+var ip_addr = "192.168.15.41";
+var connection = new WebSocket("ws://" + ip_addr + ":81/");
+connection.onopen = function () {
+  console.log("open connection");
+  document.getElementById("ws_status").innerHTML = "Connected";
+  connection.send("client connection:" + new Date());
+};
+connection.onerror = function (error) {
+  console.log("websocket error ", error);
+};
+connection.onmessage = function (e) {
+  console.log("Server: ", e.data);
+};
+
+function sendMsg(a) {
+  connection.send(a);
+}
 
 function enabled_pallets(mode) {
   let c_plt = document.getElementsByClassName("block-c");
@@ -55,7 +72,6 @@ function switch_bar_enabled (a){
     s_bar.style.display = "none";
   }
 }
-
 var color_mode = {
   btn1: document.getElementById("mode1"),
   btn2: document.getElementById("mode0"),
@@ -82,23 +98,7 @@ var light_mode = 0;
 var current_mode;
 var current_pallet;
 
-var ip_addr = "192.168.15.41";
-var connection = new WebSocket("ws://" + ip_addr + ":81/");
-connection.onopen = function () {
-  console.log("open connection");
-  document.getElementById("ws_status").innerHTML = "Connected";
-  connection.send("client connection:" + new Date());
-};
-connection.onerror = function (error) {
-  console.log("websocket error ", error);
-};
-connection.onmessage = function (e) {
-  console.log("Server: ", e.data);
-};
 
-function sendMsg(a) {
-  connection.send(a);
-}
 
 class rgbObj {
   constructor(r, g, b) {
@@ -111,7 +111,6 @@ class rgbObj {
     this.green = rgb[1];
     this.blue = rgb[2];
   }
-
 }
 var pallet1 = new rgbObj(0, 0, 0);
 var pallet2 = new rgbObj(0, 0, 0);

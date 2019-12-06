@@ -13,12 +13,18 @@ function myresponse() {
 }
 */
 
+//const {RGBobj,Pallets} = require("./extra_classes");
+
 var timer_obj;
 var velocity = 1000;
 var range = document.getElementById("myRange");
 var range_value = document.getElementById("range_value");
 
-//const {RGBobj,Pallets} = require("./extra_classes");
+var color_mode = {
+  btn1: document.getElementById("mode1"),
+  btn2: document.getElementById("mode0"),
+  btn3: document.getElementById("mode2"),
+};
 
 class RGBobj {
   constructor(r, g, b) {
@@ -36,26 +42,6 @@ class RGBobj {
       return rgb;
   }
 }
-
-// var pallets = {
-//   current_obj: null,
-//   cur_plt: null,
-//   parent: document.getElementById("pallet_array"),
-//   plt1: document.getElementById("pallet1"),
-//   plt2: document.getElementById("pallet2"),
-//   plt3: document.getElementById("pallet3"),
-//   plt_list: [this.plt1, this.plt2, this.plt3],
-//   highlight: function (a) {
-//     this.plt_list.forEach(element => {
-//       if (element == this.plt_list[a]) {
-//         element.style.opacity = 1;
-//       } else {
-//         element.style.opacity = 0.5;
-//       }
-//     });
-//   },
-
-// };
 
 class Pallets {
   current_obj = null;
@@ -153,11 +139,6 @@ function switch_bar_enabled(a) {
     s_bar.style.display = "none";
   }
 }
-var color_mode = {
-  btn1: document.getElementById("mode1"),
-  btn2: document.getElementById("mode0"),
-  btn3: document.getElementById("mode2"),
-};
 
 // var obj = new RGBobj(10,0,0);
 // console.log(obj.get_values());

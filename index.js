@@ -1,6 +1,7 @@
 const express = require('express');
-var path = require(`path`);
+var path = require('path');
 const app = new express();
+const open = require('open');
 
 console.log(__dirname);
 
@@ -14,3 +15,4 @@ app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
 });
 
+//open('http://localhost:3000', {app: 'chrome'});

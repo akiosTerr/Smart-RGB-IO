@@ -14,17 +14,98 @@ function myresponse() {
 */
 
 var timer_obj;
-var velocity;
+var velocity = 1000;
 var range = document.getElementById("myRange");
 var range_value = document.getElementById("range_value");
 
+//const {RGBobj,Pallets} = require("./extra_classes");
+
+class RGBobj {
+  constructor(r, g, b) {
+      this.red = r;
+      this.green = g;
+      this.blue = b;
+  }
+  set_values(rgba) {
+      this.red = rgba[0];
+      this.green = rgba[1];
+      this.blue = rgba[2];
+  }
+  get_values() {
+      let rgb = [this.red, this.green, this.blue];
+      return rgb;
+  }
+}
+
+// var pallets = {
+//   current_obj: null,
+//   cur_plt: null,
+//   parent: document.getElementById("pallet_array"),
+//   plt1: document.getElementById("pallet1"),
+//   plt2: document.getElementById("pallet2"),
+//   plt3: document.getElementById("pallet3"),
+//   plt_list: [this.plt1, this.plt2, this.plt3],
+//   highlight: function (a) {
+//     this.plt_list.forEach(element => {
+//       if (element == this.plt_list[a]) {
+//         element.style.opacity = 1;
+//       } else {
+//         element.style.opacity = 0.5;
+//       }
+//     });
+//   },
+
+// };
+
+class Pallets {
+  current_obj = null;
+  cur_plt = null;
+  elements = {
+      parent: document.getElementById("pallet_array"),
+      plt1: document.getElementById("pallet1"),
+      plt2: document.getElementById("pallet2"),
+      plt3: document.getElementById("pallet3"),
+      list: function () {
+          return [this.plt1, this.plt2, this.plt3]
+      },
+  };
+  constructor() {
+    console.log("pallet instantiate");
+  }
+
+  list() {
+      let arr = Pallets.elements.list();
+      for (let i = 0; i < arr.length; i++) {
+          const element = array[i];
+          console.log(element);
+      }
+  }
+  highlight(a) {
+      this.arr = this.elements.list();
+      this.arr.forEach(element => {
+          if (element == this.arr[a]) {
+              element.style.opacity = 1;
+          } else {
+              element.style.opacity = 0.5;
+          }
+      });
+  }
+}
+var pallet = new Pallets();
+
 var ip_addr = "192.168.15.41";
 var connection = new WebSocket("ws://" + ip_addr + ":81/");
+
 connection.onopen = function () {
   console.log("open connection");
   document.getElementById("ws_status").innerHTML = "Connected";
+  document.getElementById("ws_status").style.backgroundColor = "green";
   connection.send("client connection:" + new Date());
 };
+connection.onclose = function () {
+  console.log("close connection");
+  document.getElementById("ws_status").innerHTML = "Awaiting connection...";
+}
 connection.onerror = function (error) {
   console.log("websocket error ", error);
 };
@@ -38,7 +119,7 @@ function sendMsg(a) {
 
 function enabled_pallets(mode) {
   let c_plt = document.getElementsByClassName("block-c");
-  
+
   switch (mode) {
     case "single":
       for (let i = 0; i < c_plt.length; i++) {
@@ -63,12 +144,12 @@ function enabled_pallets(mode) {
       console.log("invalid mode");
   }
 }
-function switch_bar_enabled (a){
+function switch_bar_enabled(a) {
   console.log("hello bar");
   var s_bar = document.getElementById("s_bar");
   if (a == true) {
     s_bar.style.display = "flex";
-  }else{
+  } else {
     s_bar.style.display = "none";
   }
 }
@@ -77,14 +158,14 @@ var color_mode = {
   btn2: document.getElementById("mode0"),
   btn3: document.getElementById("mode2"),
 };
-var pallets = {
-  current_obj: null,
-  cur_plt: null,
-  parent: document.getElementById("pallet_array"),
-  plt1: document.getElementById("pallet1"),
-  plt2: document.getElementById("pallet2"),
-  plt3: document.getElementById("pallet3"),
-};
+
+// var obj = new RGBobj(10,0,0);
+// console.log(obj.get_values());
+// obj.set_values([10,50,12]);
+// console.log(obj.get_values()); 
+
+
+
 var inputs = {
   red: document.getElementById("red"),
   green: document.getElementById("green"),
@@ -98,45 +179,32 @@ var light_mode = 0;
 var current_mode;
 var current_pallet;
 
+var rgb_obj1 = new RGBobj(0, 0, 0);
+var rgb_obj2= new RGBobj(0, 0, 0);
+var rgb_obj3 = new RGBobj(0, 0, 0);
 
+inputs.red.addEventListener("change", set_color_p, false);
+inputs.green.addEventListener("change", set_color_p, false);
+inputs.blue.addEventListener("change", set_color_p, false);
 
-class rgbObj {
-  constructor(r, g, b) {
-    this.red = r;
-    this.green = g;
-    this.blue = b;
-  }
-  set_values(rgb) {
-    this.red = rgb[0];
-    this.green = rgb[1];
-    this.blue = rgb[2];
-  }
-}
-var pallet1 = new rgbObj(0, 0, 0);
-var pallet2 = new rgbObj(0, 0, 0);
-var pallet3 = new rgbObj(0, 0, 0);
-
-function add_rgb() {
-  let values = get_rgb_values();
-  let str = `rgb(${values[0]},${values[1]},${values[2]})`;
-  pallets.cur_plt.style.backgroundColor = str;
-  pallets.current_obj.set_values(values);
-  sendMsg("-");
+function set_color_p() {
+  let rgbA = get_rgb_values();
+  pallet.cur_plt.style.backgroundColor = `rgb(${rgbA[0]},${rgbA[1]},${rgbA[2]})`;
+  pallet.current_obj.set_values(rgbA);
+  sendMsg(pallet.cur_plt + " rgb updated");
 }
 
-function start () {
-  if(timer_obj != null) clearInterval(timer_obj); 
-
-  timer_obj = setInterval (function() {
+function start() {
+  if (timer_obj != null) clearInterval(timer_obj);
+  timer_obj = setInterval(function () {
     sendMsg("-");
     console.log("tick");
-  },velocity); 
-  console.log("interval started");
+    
+  }, velocity);
 }
 
 function stop() {
-  console.log("stoping interval");
-  if(timer_obj != null) clearInterval(timer_obj); 
+  if (timer_obj != null) clearInterval(timer_obj);
   sendMsg("!");
 }
 
@@ -148,10 +216,10 @@ function change_mode() {
     light_mode = 0;
   }
   if (light_mode == 2) {
-    pallets.parent.style.display = "flex";
-    enabled_pallets("single");  
+    pallet.elements.parent.style.display = "flex";
+    enabled_pallets("single");
     switch_bar_enabled(false);
-  }else{
+  } else {
     enabled_pallets("triple");
     switch_bar_enabled(true);
   }
@@ -163,15 +231,15 @@ function change_mode() {
 function change_color_mode(arg) {
   if (arg == 1) {
     current_color_mode = 1;
-    pallets.parent.style.display = "flex";
-    enabled_pallets("triple");
+    pallet.elements.parent.style.display = "flex";
     color_mode.btn1.style.backgroundColor = "green";
     color_mode.btn2.style.backgroundColor = "#666";
     color_mode.btn3.style.backgroundColor = "#666";
+    enabled_pallets("triple");
     console.log("mode 1");
   } else if (arg == 2) {
     current_color_mode = 2;
-    pallets.parent.style.display = "flex";
+    pallet.elements.parent.style.display = "flex";
     color_mode.btn3.style.backgroundColor = "green";
     color_mode.btn1.style.backgroundColor = "#666";
     color_mode.btn2.style.backgroundColor = "#666";
@@ -180,7 +248,7 @@ function change_color_mode(arg) {
   }
   else {
     current_color_mode = 0;
-    pallets.parent.style.display = "none";
+    pallet.elements.parent.style.display = "none";
     color_mode.btn2.style.backgroundColor = "green";
     color_mode.btn1.style.backgroundColor = "#666";
     color_mode.btn3.style.backgroundColor = "#666";
@@ -192,38 +260,30 @@ function change_color_mode(arg) {
 function set_plt(arg) {
   plt_id = arg;
   if (arg == 1) {
-    pallets.cur_plt = pallets.plt1;
-    pallets.current_obj = pallet1;
-    pallets.plt1.style.opacity = 1;
-    pallets.plt2.style.opacity = 0.7;
-    pallets.plt3.style.opacity = 0.7;
+    pallet.cur_plt = pallet.elements.plt1;
+    pallet.current_obj = rgb_obj1;
+    pallet.highlight(0);
+    load_rgb_values();
   } else if (arg == 2) {
-    pallets.cur_plt = pallets.plt2;
-    pallets.current_obj = pallet2;
-    pallets.plt2.style.opacity = 1;
-    pallets.plt1.style.opacity = 0.7;
-    pallets.plt3.style.opacity = 0.7;
+    pallet.cur_plt = pallet.elements.plt2;
+    pallet.current_obj = rgb_obj2;
+    pallet.highlight(1);
+    load_rgb_values();
   } else {
-    pallets.cur_plt = pallets.plt3;
-    pallets.current_obj = pallet3;
-    pallets.plt3.style.opacity = 1;
-    pallets.plt1.style.opacity = 0.7;
-    pallets.plt2.style.opacity = 0.7;
+    pallet.cur_plt = pallet.elements.plt3;
+    pallet.current_obj = rgb_obj3;
+    pallet.highlight(2);
+    load_rgb_values();
   }
 }
 
-function blank_plt() {
-  pallets.cur_plt.style.backgroundColor = "darkgray";
+function load_rgb_values() {
+  let rgba = pallet.current_obj.get_values();
+  inputs.red.innerHTML = rgba[0];
+  inputs.green.innerHTML = rgba[1];
+  inputs.blue.innerHTML = rgba[2];
 }
 
-inputs.red.addEventListener("change", set_color_p, false);
-inputs.green.addEventListener("change", set_color_p, false);
-inputs.blue.addEventListener("change", set_color_p, false);
-
-function set_color_p() {
-  let Ca = get_rgb_values();
-  btn.style.backgroundColor = `rgb(${Ca[0]},${Ca[1]},${Ca[2]})`;
-}
 
 function get_rgb_values() {
   const elements = Object.values(inputs);
@@ -248,21 +308,8 @@ range.addEventListener(
   "input",
   function () {
     velocity = range.value;
-    range_value.innerHTML = velocity+"ms";
-    //sendMsg("@" + velocity);
+    range_value.innerHTML = velocity + "ms";
+    //sendMsg("@" + pwm);
   },
   false
 );
-
-// const delay = (ms, result) =>
-//   new Promise(resolve => setTimeout(() => resolve(result), ms));
-
-// async function delays() {
-//   let a = await delay(1600, "Hello, I'm in an");
-//   console.log(a);
-
-//   let b = await delay(800, "async function!");
-//   console.log(b);
-// }
-
-// delays();

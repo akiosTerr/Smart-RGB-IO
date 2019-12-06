@@ -1,22 +1,24 @@
 #include <Arduino.h>
 #include <DNSServer.h>
 #include <ESP8266WiFi.h>
-#include <WiFiManager.h>  
+#include <ESP8266WebServer.h>
+#include <WiFiManager.h>
+#include <WebSockets.h>
 #include <WebSocketsServer.h>
-#include </../rgb_driver/rgb_classlib.h>
+#include <rgb_driver/rgb_classlib.h>
 
 #define pin_count 3
 
-std::array<unsigned short int, 3> rgb_old;
 
-int pins[pin_count] = {16, 5, 4};
+int pins[pin_count] = {5, 4, 0};
 
 const uint16_t a = 1023;
 const uint16_t b = 254;
 
 WebSocketsServer webSocket = WebSocketsServer(81);
+std::array<unsigned short int, 3> rgb_old;
 
-void flash_p_colors()
+void flash_p_colors(uint8_t num)
 {
   std::array<unsigned short int, 3> rgb;
   int zc = 0;
@@ -38,6 +40,7 @@ void flash_p_colors()
     digitalWrite(pins[2], rgb[2]);
   }
   rgb_old = rgb;
+  webSocket.sendTXT(num,"tick");
 }
 
 void turn_off_leds()
@@ -56,7 +59,7 @@ void dimming_led(uint8_t *payload)
   Serial.println(brightness);
 }
 
-void log_text_payload(uint8_t *payload,size_t lenght)
+void log_text_payload(uint8_t *payload, size_t lenght)
 {
   for (uint i = 0; i < lenght; i++)
   {
@@ -75,13 +78,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
       dimming_led(payload);
       break;
     case '-':
-      flash_p_colors();
+      flash_p_colors(num);
       break;
     case '!':
       turn_off_leds();
-      break;  
+      break;
     default:
-      log_text_payload(payload,lenght);
+      log_text_payload(payload, lenght);
       break;
     }
   }
@@ -89,42 +92,43 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
   {
     switch (type)
     {
-    case WStype_DISCONNECTED:
-      Serial.println("client disconnected");
-      break;
     case WStype_CONNECTED:
       Serial.println("client connected");
+      webSocket.sendTXT(num,"WELCOME!");
+      break;
+    case WStype_DISCONNECTED:
+      Serial.println("client disconnected");
+      webSocket.sendTXT(num,"GOODBYE!");
       break;
     case WStype_ERROR:
       Serial.println("there has been a WS ERROR");
-      log_text_payload(payload,lenght);
+      log_text_payload(payload, lenght);
       break;
-		case WStype_FRAGMENT_TEXT_START:
-		case WStype_FRAGMENT_BIN_START:
-		case WStype_FRAGMENT:
-		case WStype_FRAGMENT_FIN:
-    break;  
+    case WStype_FRAGMENT_TEXT_START:
+    case WStype_FRAGMENT_BIN_START:
+    case WStype_FRAGMENT:
+    case WStype_FRAGMENT_FIN:
+      break;
     }
   }
 }
 
-  void setup()
+void setup()
+{
+  Serial.begin(115200);
+  WiFiManager wifiManager;
+  wifiManager.autoConnect("autocon_AP");
+  Serial.println("Connected!");
+  for (int i = 0; i < pin_count; i++)
   {
-    Serial.begin(115200);
-    WiFiManager wifiManager;
-    wifiManager.autoConnect("autocon_AP");
-    Serial.println("Connected!");
-    for (int i = 0; i < pin_count; i++)
-    {
-      pinMode(pins[i], 1);
-      digitalWrite(pins[i], 0);
-    }
-    webSocket.onEvent(webSocketEvent);
-    webSocket.begin();
-    Rgb wht(0);
+    pinMode(pins[i], 1);
+    digitalWrite(pins[i], 0);
   }
+  webSocket.onEvent(webSocketEvent);
+  webSocket.begin();
+}
 
-  void loop()
-  {
-    webSocket.loop();
-  }
+void loop()
+{
+  webSocket.loop();
+}

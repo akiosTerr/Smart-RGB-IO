@@ -26,6 +26,18 @@ var color_mode = {
   btn3: document.getElementById("mode2"),
 };
 
+var inputs = {
+  red: document.getElementById("red"),
+  green: document.getElementById("green"),
+  blue: document.getElementById("blue"),
+};
+
+var btn = document.getElementById("addbt")
+var light_modes = ["FADE", "FLASH", "STATIC"];
+var current_color_mode;
+var light_mode = 0;
+var current_mode;
+
 class RGBobj {
   constructor(r, g, b) {
       this.red = r;
@@ -42,6 +54,10 @@ class RGBobj {
       return rgb;
   }
 }
+
+var rgb_obj1 = new RGBobj(0, 0, 0);
+var rgb_obj2= new RGBobj(0, 0, 0);
+var rgb_obj3 = new RGBobj(0, 0, 0);
 
 class Pallets {
   current_obj = null;
@@ -60,7 +76,7 @@ class Pallets {
   }
 
   list() {
-      let arr = Pallets.elements.list();
+      let arr = this.elements.list();
       for (let i = 0; i < arr.length; i++) {
           const element = array[i];
           console.log(element);
@@ -140,23 +156,6 @@ function switch_bar_enabled(a) {
   }
 }
 
-var inputs = {
-  red: document.getElementById("red"),
-  green: document.getElementById("green"),
-  blue: document.getElementById("blue"),
-};
-var btn = document.getElementById("addbt")
-var light_modes = ["FADE", "FLASH", "STATIC"];
-var current_color_mode;
-var plt_id;
-var light_mode = 0;
-var current_mode;
-var current_pallet;
-
-var rgb_obj1 = new RGBobj(0, 0, 0);
-var rgb_obj2= new RGBobj(0, 0, 0);
-var rgb_obj3 = new RGBobj(0, 0, 0);
-
 inputs.red.addEventListener("change", set_color_p, false);
 inputs.green.addEventListener("change", set_color_p, false);
 inputs.blue.addEventListener("change", set_color_p, false);
@@ -165,7 +164,7 @@ function set_color_p() {
   let rgbA = get_rgb_values();
   pallet.cur_plt.style.backgroundColor = `rgb(${rgbA[0]},${rgbA[1]},${rgbA[2]})`;
   pallet.current_obj.set_values(rgbA);
-  sendMsg(pallet.cur_plt + " rgb updated");
+  //sendMsg(pallet.cur_plt + " rgb updated");
 }
 
 function start() {
@@ -173,6 +172,19 @@ function start() {
   timer_obj = setInterval(function () {
     sendMsg("-");    
   }, velocity);
+}
+
+
+
+function send_rgb () {
+  console.log(current_mode);
+  
+  if(current_mode == "2"){
+    let _rgb = pallet.current_obj.get_values();
+    sendMsg(_rgb[0]);
+  }else{
+    console.log("not in static");
+  }
 }
 
 function stop() {
@@ -230,7 +242,6 @@ function change_color_mode(arg) {
 }
 
 function set_plt(arg) {
-  plt_id = arg;
   if (arg == 1) {
     pallet.cur_plt = pallet.elements.plt1;
     pallet.current_obj = rgb_obj1;

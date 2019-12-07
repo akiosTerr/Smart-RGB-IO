@@ -31,6 +31,20 @@
               id="myRange"
             />
           </div>
+          <div>
+            <label>brightness:</label>
+            <label class="" id="range_value">1000</label>
+          </div>
+          <div>
+            <input
+              type="range"
+              min="10"
+              max="1000"
+              value="1000"
+              class="slider"
+              id="myRange"
+            />
+          </div>
         </div>
         <div class="switch" id="s_bar">
           <div class="buttonT">
@@ -104,6 +118,9 @@
         </a>
         <a href="#" onclick="stop()" id="addbt" class="add-btn">
           <p>stop</p>
+        </a>
+        <a href="#" onclick="send_rgb()" id="addbt" class="add-btn">
+          <p>add</p>
         </a>
       </section>
     </div>

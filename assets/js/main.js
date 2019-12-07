@@ -140,13 +140,6 @@ function switch_bar_enabled(a) {
   }
 }
 
-// var obj = new RGBobj(10,0,0);
-// console.log(obj.get_values());
-// obj.set_values([10,50,12]);
-// console.log(obj.get_values()); 
-
-
-
 var inputs = {
   red: document.getElementById("red"),
   green: document.getElementById("green"),
@@ -178,9 +171,7 @@ function set_color_p() {
 function start() {
   if (timer_obj != null) clearInterval(timer_obj);
   timer_obj = setInterval(function () {
-    sendMsg("-");
-    console.log("tick");
-    
+    sendMsg("-");    
   }, velocity);
 }
 
@@ -260,9 +251,9 @@ function set_plt(arg) {
 
 function load_rgb_values() {
   let rgba = pallet.current_obj.get_values();
-  inputs.red.innerHTML = rgba[0];
-  inputs.green.innerHTML = rgba[1];
-  inputs.blue.innerHTML = rgba[2];
+  inputs.red.value = rgba[0];
+  inputs.green.value = rgba[1];
+  inputs.blue.value = rgba[2];
 }
 
 

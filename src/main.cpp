@@ -9,7 +9,6 @@
 
 #define pin_count 3
 
-
 int pins[pin_count] = {5, 4, 0};
 
 const uint16_t a = 1023;
@@ -98,7 +97,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
       break;
     case WStype_DISCONNECTED:
       Serial.println("client disconnected");
-      webSocket.sendTXT(num,"GOODBYE!");
       break;
     case WStype_ERROR:
       Serial.println("there has been a WS ERROR");

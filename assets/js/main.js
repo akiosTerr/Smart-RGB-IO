@@ -174,11 +174,12 @@ function start() {
   }, velocity);
 }
 
-
+function send_bin () {
+  // send binary data 
+}
 
 function send_rgb () {
   console.log(current_mode);
-  
   if(current_mode == "2"){
     let _rgb = pallet.current_obj.get_values();
     sendMsg(_rgb[0]);

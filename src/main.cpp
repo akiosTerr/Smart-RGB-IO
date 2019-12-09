@@ -35,12 +35,10 @@ void flash_p_colors(uint8_t num)
   } while (rgb == rgb_old);
   for (size_t i = 0; i < 3; i++)
   {
-    digitalWrite(pins[0], rgb[0]);
-    digitalWrite(pins[1], rgb[1]);
-    digitalWrite(pins[2], rgb[2]);
+    digitalWrite(pins[i], rgb[i]);
   }
   rgb_old = rgb;
-  webSocket.sendTXT(num,"tick");
+  webSocket.sendTXT(num, "tick");
 }
 
 void turn_off_leds()
@@ -51,8 +49,19 @@ void turn_off_leds()
   }
 }
 
-void display_rgb () {
-  
+void jsonify(uint8_t num)
+{
+  //char JSONMessage[] = "{\"SensorType\":\"Temperature\", \"Value\": 10}";
+  StaticJsonDocument<200> doc;
+  JsonObject object = doc.to<JsonObject>();
+  object["red"] = 255;
+  object["green"] = 255;
+  object["blue"] = 255;
+  serializeJson(doc, Serial);
+}
+
+void display_rgb()
+{
 }
 
 void dimming_led(uint8_t *payload)
@@ -65,6 +74,7 @@ void dimming_led(uint8_t *payload)
 
 void log_text_payload(uint8_t *payload, size_t lenght)
 {
+  Serial.print("text: ");
   for (uint i = 0; i < lenght; i++)
   {
     Serial.print((char)payload[i]);
@@ -72,7 +82,22 @@ void log_text_payload(uint8_t *payload, size_t lenght)
   Serial.println();
 }
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
+void read_bin(uint8_t *payload, size_t length)
+{
+  Serial.printf("[WSc] get binary length: %u\n", length);
+  hexdump(payload, length);
+
+  float *farray = (float *)payload;
+  int elements = (length / sizeof(float));
+  for (int i = 0; i < elements; i++)
+  {
+    float val = farray[i];
+    Serial.print(val);
+    Serial.println();
+  }
+}
+
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
 {
   if (type == WStype_TEXT)
   {
@@ -87,8 +112,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
     case '!':
       turn_off_leds();
       break;
+    case '$':
+      jsonify(num);
     default:
-      log_text_payload(payload, lenght);
+      log_text_payload(payload, length);
       break;
     }
   }
@@ -96,16 +123,19 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
   {
     switch (type)
     {
+    case WStype_BIN:
+      read_bin(payload,length);
+      break;
     case WStype_CONNECTED:
       Serial.println("client connected");
-      webSocket.sendTXT(num,"WELCOME!");
+      webSocket.sendTXT(num, "WELCOME!");
       break;
     case WStype_DISCONNECTED:
       Serial.println("client disconnected");
       break;
     case WStype_ERROR:
       Serial.println("there has been a WS ERROR");
-      log_text_payload(payload, lenght);
+      log_text_payload(payload, length);
       break;
     case WStype_FRAGMENT_TEXT_START:
     case WStype_FRAGMENT_BIN_START:
@@ -114,14 +144,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
       break;
     }
   }
-}
-
-void jsonify(){
-  StaticJsonDocument<200> doc;
-  doc["red"] = 255;
-  doc["green"] = 255;
-  doc["blue"] = 255;
-  serializeJson(doc, Serial);
 }
 
 void setup()
@@ -137,13 +159,9 @@ void setup()
   }
   webSocket.onEvent(webSocketEvent);
   webSocket.begin();
-  jsonify();
 }
 
 void loop()
 {
   webSocket.loop();
 }
-
-
-

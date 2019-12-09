@@ -2,6 +2,7 @@
 #include <DNSServer.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <ArduinoJson.h>
 #include <WiFiManager.h>
 #include <WebSockets.h>
 #include <WebSocketsServer.h>
@@ -48,6 +49,10 @@ void turn_off_leds()
   {
     digitalWrite(pins[i], 0);
   }
+}
+
+void display_rgb () {
+  
 }
 
 void dimming_led(uint8_t *payload)
@@ -111,6 +116,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
   }
 }
 
+void jsonify(){
+  StaticJsonDocument<200> doc;
+  doc["red"] = 255;
+  doc["green"] = 255;
+  doc["blue"] = 255;
+  serializeJson(doc, Serial);
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -124,9 +137,13 @@ void setup()
   }
   webSocket.onEvent(webSocketEvent);
   webSocket.begin();
+  jsonify();
 }
 
 void loop()
 {
   webSocket.loop();
 }
+
+
+

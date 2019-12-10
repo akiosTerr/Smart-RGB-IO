@@ -82,6 +82,18 @@ void log_text_payload(uint8_t *payload, size_t lenght)
   Serial.println();
 }
 
+void text_debug (uint8_t *payload, size_t lenght){
+  for (uint i = 0; i < lenght; i++)
+  {
+    Serial.print("debug txt: ");
+    Serial.print((char)payload[i]);
+    Serial.print(" > ");
+    Serial.print(i);
+    Serial.println();
+  }
+  Serial.println();
+}
+
 void read_bin(uint8_t *payload, size_t length)
 {
   Serial.printf("[WSc] get binary length: %u\n", length);
@@ -113,7 +125,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
       turn_off_leds();
       break;
     case '$':
-      jsonify(num);
+      text_debug(payload, length);
     default:
       log_text_payload(payload, length);
       break;

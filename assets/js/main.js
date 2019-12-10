@@ -17,8 +17,16 @@ function myresponse() {
 
 var timer_obj;
 var velocity = 1000;
+var pwm = 1023;
 var range = document.getElementById("myRange");
 var range_value = document.getElementById("range_value");
+
+var ranges = {
+  range_vel: document.getElementById("rangeVel"),
+  range_pwm: document.getElementById("rangePwm"),
+  range_vel_value: document.getElementById("range_vel_value"),
+  range_pwm_value: document.getElementById("range_pwm_value"),
+}
 
 var color_mode = {
   btn1: document.getElementById("mode1"),
@@ -179,10 +187,10 @@ function send_bin () {
 }
 
 function send_rgb () {
-  console.log(current_mode);
   if(current_mode == "2"){
     let _rgb = pallet.current_obj.get_values();
-    sendMsg(_rgb[0]);
+    let str = "$"+_rgb[0];
+    sendMsg(str);
   }else{
     console.log("not in static");
   }
@@ -268,7 +276,6 @@ function load_rgb_values() {
   inputs.blue.value = rgba[2];
 }
 
-
 function get_rgb_values() {
   const elements = Object.values(inputs);
   let rgbV = [];
@@ -288,12 +295,21 @@ function get_rgb_values() {
   return rgbV;
 }
 
-range.addEventListener(
+ranges.range_vel.addEventListener(
   "input",
   function () {
-    velocity = range.value;
-    range_value.innerHTML = velocity + "ms";
-    //sendMsg("@" + pwm);
+    velocity = ranges.range_vel.value;
+    ranges.range_vel_value.innerHTML = velocity + "ms";
+  },
+  false
+);
+
+ranges.range_pwm.addEventListener(
+  "input",
+  function () {
+    pwm = ranges.range_pwm.value;
+    ranges.range_pwm_value.innerHTML = pwm;
+    sendMsg("@" + pwm);
   },
   false
 );

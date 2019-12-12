@@ -60,10 +60,6 @@ void jsonify(uint8_t num)
   serializeJson(doc, Serial);
 }
 
-void display_rgb()
-{
-}
-
 void dimming_led(uint8_t *payload)
 {
   uint16_t brightness = (uint16_t)strtol((const char *)&payload[1], NULL, 10);
@@ -82,14 +78,21 @@ void log_text_payload(uint8_t *payload, size_t lenght)
   Serial.println();
 }
 
-void text_debug (uint8_t *payload, size_t lenght){
+void text_debug(uint8_t *payload, size_t lenght)
+{
+  uint8_t *samples[] = {};
   for (uint i = 0; i < lenght; i++)
   {
-    Serial.print("debug txt: ");
+    Serial.print("[WSc] debug txt: ");
     Serial.print((char)payload[i]);
     Serial.print(" > ");
     Serial.print(i);
     Serial.println();
+    char test = (char)payload[i];
+    if( test == '^'){
+      Serial.println("stop point: "+i);
+      samples[i] = &payload[i+1];
+    }
   }
   Serial.println();
 }
@@ -136,7 +139,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
     switch (type)
     {
     case WStype_BIN:
-      read_bin(payload,length);
+      read_bin(payload, length);
       break;
     case WStype_CONNECTED:
       Serial.println("client connected");

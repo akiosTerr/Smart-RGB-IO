@@ -189,8 +189,10 @@ function send_bin () {
 function send_rgb () {
   if(current_mode == "2"){
     let _rgb = pallet.current_obj.get_values();
-    let str = "$"+_rgb[0];
-    sendMsg(str);
+    let str1 = _rgb[0];
+    let str2 = _rgb[1];
+    let str3 = _rgb[2];
+    sendMsg("$"+str1+"^"+str2+"^"+str3);
   }else{
     console.log("not in static");
   }

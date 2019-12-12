@@ -192,7 +192,7 @@ function send_rgb () {
     let str1 = _rgb[0];
     let str2 = _rgb[1];
     let str3 = _rgb[2];
-    sendMsg("$"+str1+"^"+str2+"^"+str3);
+    sendMsg("$^"+str1+"^"+str2+"^"+str3);
   }else{
     console.log("not in static");
   }

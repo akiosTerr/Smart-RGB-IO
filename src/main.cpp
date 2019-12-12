@@ -7,6 +7,7 @@
 #include <WebSockets.h>
 #include <WebSocketsServer.h>
 #include <rgb_driver/rgb_classlib.h>
+#include <vector>
 
 #define pin_count 3
 
@@ -38,6 +39,7 @@ void flash_p_colors(uint8_t num)
     digitalWrite(pins[i], rgb[i]);
   }
   rgb_old = rgb;
+  Serial.println(num);
   webSocket.sendTXT(num, "tick");
 }
 
@@ -78,23 +80,32 @@ void log_text_payload(uint8_t *payload, size_t lenght)
   Serial.println();
 }
 
+void display_rgb (std::vector<long> rgb){
+  for (size_t i = 0; i < rgb.size(); i++)
+  {
+    analogWrite(pins[i],rgb[i]);
+  }
+}
+
 void text_debug(uint8_t *payload, size_t lenght)
 {
-  uint8_t *samples[] = {};
+  //std::array<long, 3> samples = {0,0,0};
+  std::vector<long> samples;
   for (uint i = 0; i < lenght; i++)
   {
-    Serial.print("[WSc] debug txt: ");
-    Serial.print((char)payload[i]);
-    Serial.print(" > ");
-    Serial.print(i);
-    Serial.println();
     char test = (char)payload[i];
     if( test == '^'){
-      Serial.println("stop point: "+i);
-      samples[i] = &payload[i+1];
+      Serial.print("stp: ");
+      Serial.println(i);
+      samples.push_back(strtol((const char *)&payload[i+1], NULL, 10));
     }
   }
   Serial.println();
+  for (uint i = 0; i < samples.size(); i++)
+  {
+    Serial.println(samples[i]);
+  }
+  display_rgb(samples);
 }
 
 void read_bin(uint8_t *payload, size_t length)

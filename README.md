@@ -6,7 +6,7 @@
 - custom color picking
 
 
-![GitHub Logo](https://i.ibb.co/vXkX6cD/Controller-ui.png)
+![GitHub Logo](https://i.ibb.co/P474rBD/Captura-de-tela-2019-12-13-14-38-29.png)
 Format: ![Alt Text](url)
 
 ## License

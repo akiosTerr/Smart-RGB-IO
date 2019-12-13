@@ -3,7 +3,7 @@
 
 - built-in effects
 - dimming
-- custom color picking (*wip*)
+- custom color picking
 
 
 ![GitHub Logo](https://i.ibb.co/vXkX6cD/Controller-ui.png)

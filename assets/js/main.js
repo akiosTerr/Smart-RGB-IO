@@ -172,7 +172,7 @@ function set_color_p() {
   let rgbA = get_rgb_values();
   pallet.cur_plt.style.backgroundColor = `rgb(${rgbA[0]},${rgbA[1]},${rgbA[2]})`;
   pallet.current_obj.set_values(rgbA);
-  //sendMsg(pallet.cur_plt + " rgb updated");
+  send_rgb();
 }
 
 function start() {
@@ -180,10 +180,6 @@ function start() {
   timer_obj = setInterval(function () {
     sendMsg("-");    
   }, velocity);
-}
-
-function send_bin () {
-  // send binary data 
 }
 
 function send_rgb () {

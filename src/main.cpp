@@ -7,11 +7,10 @@
 #include <WebSockets.h>
 #include <WebSocketsServer.h>
 #include <rgb_driver/rgb_classlib.h>
-#include <vector>
 
 #define pin_count 3
 
-int pins[pin_count] = {5, 4, 0};
+int pins[pin_count] = {5, 0, 4};
 
 const uint16_t a = 1023;
 const uint16_t b = 254;
@@ -80,46 +79,24 @@ void log_text_payload(uint8_t *payload, size_t lenght)
   Serial.println();
 }
 
-void display_rgb (std::vector<long> rgb){
-  for (size_t i = 0; i < rgb.size(); i++)
-  {
-    analogWrite(pins[i],rgb[i]);
-  }
-}
-
-void text_debug(uint8_t *payload, size_t lenght)
+void write_rgb(uint8_t *payload, size_t lenght)
 {
-  //std::array<long, 3> samples = {0,0,0};
-  std::vector<long> samples;
+  std::vector<long> rgb;
   for (uint i = 0; i < lenght; i++)
   {
     char test = (char)payload[i];
-    if( test == '^'){
-      Serial.print("stp: ");
-      Serial.println(i);
-      samples.push_back(strtol((const char *)&payload[i+1], NULL, 10));
+    if (test == '^')
+    {
+      rgb.push_back(strtol((const char *)&payload[i + 1], NULL, 10));
     }
   }
-  Serial.println();
-  for (uint i = 0; i < samples.size(); i++)
+  for (uint i = 0; i < rgb.size(); i++)
   {
-    Serial.println(samples[i]);
-  }
-  display_rgb(samples);
-}
-
-void read_bin(uint8_t *payload, size_t length)
-{
-  Serial.printf("[WSc] get binary length: %u\n", length);
-  hexdump(payload, length);
-
-  float *farray = (float *)payload;
-  int elements = (length / sizeof(float));
-  for (int i = 0; i < elements; i++)
-  {
-    float val = farray[i];
-    Serial.print(val);
-    Serial.println();
+    long val10bit = (rgb[i] * 4);
+    Serial.print(rgb[i]);
+    Serial.print(" > ");
+    Serial.println(val10bit);
+    analogWrite(pins[i], val10bit);
   }
 }
 
@@ -139,7 +116,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
       turn_off_leds();
       break;
     case '$':
-      text_debug(payload, length);
+      write_rgb(payload, length);
     default:
       log_text_payload(payload, length);
       break;
@@ -149,9 +126,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
   {
     switch (type)
     {
-    case WStype_BIN:
-      read_bin(payload, length);
-      break;
     case WStype_CONNECTED:
       Serial.println("client connected");
       webSocket.sendTXT(num, "WELCOME!");

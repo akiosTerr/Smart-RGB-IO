@@ -8,12 +8,14 @@ html {
   h2 {
     color: rgb(0, 132, 255);
     font-weight: lighter;
+    text-align: center;
   }
 
   #ws_status {
     color: rgb(0, 0, 0);
     font-size: 1.4em;
     background-color:rgb(201, 204, 6);
+    text-align: center;
   }
 
   p {

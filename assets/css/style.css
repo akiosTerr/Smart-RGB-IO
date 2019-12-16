@@ -167,10 +167,27 @@ html {
     background: #c20f0f;
     cursor: pointer;
   }
+
   .palet {
     padding: 25px;
     opacity: 0.7;
     margin: 5px;
     border-radius: 7px;
-    background: #868686;
+    background: #001bb3;
   }
+
+  .presets {
+    margin-top: 5px;
+    display: inline-grid;
+    grid-template-rows: repeat(3, 50px);
+    grid-template-columns: repeat(3, 50px);
+    grid-gap: 15px;
+  }
+
+  .block-preset {
+    padding: 10px;
+    background: rgb(3, 63, 194);
+    border: 3px solid rgb(0, 0, 0);
+  }
+
+  

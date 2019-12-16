@@ -164,10 +164,6 @@ function switch_bar_enabled(a) {
   }
 }
 
-inputs.red.addEventListener("change", set_color_p, false);
-inputs.green.addEventListener("change", set_color_p, false);
-inputs.blue.addEventListener("change", set_color_p, false);
-
 function set_color_p() {
   let rgbA = get_rgb_values();
   pallet.cur_plt.style.backgroundColor = `rgb(${rgbA[0]},${rgbA[1]},${rgbA[2]})`;
@@ -292,6 +288,10 @@ function get_rgb_values() {
   }
   return rgbV;
 }
+
+inputs.red.addEventListener("change", set_color_p, false);
+inputs.green.addEventListener("change", set_color_p, false);
+inputs.blue.addEventListener("change", set_color_p, false);
 
 ranges.range_vel.addEventListener(
   "input",

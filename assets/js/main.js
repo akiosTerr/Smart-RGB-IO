@@ -20,6 +20,25 @@ var velocity = 1000;
 var pwm = 1023;
 var range = document.getElementById("myRange");
 var range_value = document.getElementById("range_value");
+var _module;
+
+$.ajaxSetup({
+  cache: true
+});
+
+$.getScript("files/js/module.js", function( data, textStatus, jqxhr ) {
+  console.log( data ); // Data returned
+  console.log( textStatus ); // Success
+  console.log( jqxhr.status ); // 200
+  console.log( "Load was performed." );
+}).then(function () {
+  _module = hello;
+  console.log(typeof (_module));
+});
+
+function test() {
+  _module();
+}
 
 var ranges = {
   range_vel: document.getElementById("rangeVel"),
@@ -80,7 +99,7 @@ class Pallets {
       },
   };
   constructor() {
-    console.log("pallet instantiate");
+    //console.log("pallet instantiate");
   }
 
   list() {
@@ -172,6 +191,7 @@ function set_color_p() {
 }
 
 function start() {
+  test();
   if (timer_obj != null) clearInterval(timer_obj);
   timer_obj = setInterval(function () {
     sendMsg("-");    

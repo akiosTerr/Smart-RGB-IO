@@ -48,8 +48,3 @@ class Pallets {
         });
     }
 }
-
-module.exports = {
-    RGBobj,
-    Pallets,
-};

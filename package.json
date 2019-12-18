@@ -29,6 +29,7 @@
   "homepage": "https://github.com/akiosTerr/Smart-RGB-IO#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "jquery": "^3.4.1",
     "open": "^7.0.0"
   }
 }

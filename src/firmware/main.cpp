@@ -6,7 +6,6 @@
 #include <WiFiManager.h>
 #include <WebSockets.h>
 #include <WebSocketsServer.h>
-#include <rgb_driver/rgb_classlib.h>
 
 #define pin_count 3
 

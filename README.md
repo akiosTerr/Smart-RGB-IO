@@ -10,9 +10,6 @@
 
 ![GitHub Logo](https://i.ibb.co/P474rBD/Captura-de-tela-2019-12-13-14-38-29.png)
 
-## Video demo
-[![video demonstration](http://img.youtube.com/vi/l3-KkKRPunA/0.jpg)](https://www.youtube.com/watch?v=l3-KkKRPunA "RGB SMART IO")
-
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
 
